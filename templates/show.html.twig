@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Formateur{% endblock %}
+
+{% block body %}
+    <h1>Formateur</h1>
+
+    <table class="table">
+        <tbody>
+        <tr>
+            <td>{{ formulaire.id }}</td>
+            <td>{{ formulaire.title }}</td>
+            <td>{{ formulaire.description }}</td>
+            <td>{{ formulaire.enable }}</td>
+            <td>{{ formulaire.author.email }}</td>
+            <td>{{ formulaire.createdAt ? formulaire.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            <td>{{ formulaire.updatedAt ? formulaire.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            <td>
+                <a href="{{ path('admin_formateur_formulaire_show', {'id': formulaire.id}) }}">show</a>
+                <a href="{{ path('admin_formateur_formulaire_edit', {'id': formulaire.id}) }}">edit</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('admin_formateur_formulaire_index') }}" class="btn border-blue-700 border-b-4 text-blue-700">Retour à la liste</a>
+
+    <a href="{{ path('admin_formateur_formulaire_edit', {'id': formulaire.id}) }}">edit</a>
+
+    {{ include('Admin/formateur_formulaire/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,14 @@
+{
+  "name": "florian-paumier/dynamic-form",
+  "description": "Création dynamique de formulaire sous symfony",
+  "minimum-stability": "stable",
+  "license": "AGPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "florian",
+      "email": "florian.paumier53@gmail.com"
+    }
+  ],
+  "require": {
+  }
+}

@@ -1,0 +1,104 @@
+{% import _self as formMacros %}
+
+{% form_theme form "component/form_theme.html.twig" %}
+
+<div class="container">
+
+    {{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.title) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.image) }}
+    {{ form_row(form.enable) }}
+
+    {{ form_errors(form.fields) }}
+    <ul id="input-fields-list"
+        class="m-auto grid md:grid-cols-3 sm:grid-cols-2 w-screen gap-x-2 gap-y-2"
+        data-prototype="{{ formMacros.printPrototypeCustom(form.fields)|e('html_attr') }}"
+        data-widget-tags="{{ 'li' }}"
+        data-widget-counter="{{ form.fields|length }}">
+        {% for field in form.fields %}
+            <li draggable="true" id="fields_{{ loop.index0 }}_section"
+                class="my-16 mx-16 bg-white rounded border-gray-500 shadow-md flex flex-col card text-grey-darkest"
+                data-counter="{{ loop.index0 }}">
+                <h2>Element n° <span class="input-position-title">{{ loop.index }}</span></h2>
+                {{ form_row(field.label) }}
+                {{ form_row(field.placeholder) }}
+                {{ form_row(field.type) }}
+                {{ form_row(field.required) }}
+                {{ form_row(field.error) }}
+
+                {% set formKey = loop.index0 %}
+
+                <ul id="form_fields_{{ formKey }}_choices"
+                    class="input-list-choices {% if field.choices|length == 0 %}hidden{% endif %}"
+                    data-prototype="{{ form_row(field.choices.vars.prototype)|e('html_attr') }}"
+                    data-widget-tags="{{ 'li' }}"
+                    data-widget-counter="{{ field.choices|length }}">
+
+                    {{ form_label(field.choices) }} : <span class="cursor-pointer hide-choice-list text-blue-500" data-display="hide">Voir
+                        <span class="hide-choice-list-status hidden">moins</span>
+                        <span class="hide-choice-list-status">plus</span>
+                    </span>
+                    <div>
+                        {% for choice in field.choices %}
+                            <li draggable="true"
+                                class="bg-white my-8 rounded border-gray-500 shadow-md flex flex-col card text-grey-darkest hidden"
+                                data-counter="{{ loop.index0 }}"
+                                id="fields_{{ formKey }}_section_{{ loop.index0 }}">
+                                {{ form_errors(choice) }}
+                                {{ form_widget(choice) }}
+                                <button class="w-1/5 mt-5 remove-fields-input bg-red-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"
+                                        type="button"
+                                        data-target="fields_{{ formKey }}_section_{{ loop.index0 }}">Supprimer
+                                </button>
+                            </li>
+                        {% endfor %}
+                    </div>
+
+                </ul>
+
+                <button type="button"
+                        class="add-new-element w-36 bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"
+                        data-key="choices"
+                        data-list-selector="form_fields_{{ formKey }}_choices">Nouveau Choix
+                </button>
+                {% do field.choices.setRendered %}
+
+                {{ form_row(field) }}
+                <button class="w-1/5 mt-5 remove-fields-input bg-red-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"
+                        type="button" data-target="fields_{{ loop.index }}_section">
+                    Supprimer
+                </button>
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% do form.fields.setRendered %}
+    <button type="button"
+            class="add-new-element w-36 bg-blue-700 text-white font-bold py-2 px-4 ml-5 rounded inline-flex items-center"
+            data-key="fields"
+            data-list-selector="input-fields-list">Nouveau Champs
+    </button>
+    <button class="submit-form-button w-36 translate-x-1/2 border-b-4 border-blue-700 text-blue-700">{{ button_label|default('Ajouter') }}</button>
+    {{ form_end(form) }}
+
+</div>
+{% macro printPrototypeCustom(form) %}
+    <div id="fields__fields__section"
+         class="my-16 bg-white rounded border-gray-500 shadow-md flex flex-col card text-grey-darkest">
+
+        <h2>Element n° <span class="input-position-title">__fields__</span></h2>
+        {{ form_row(form.vars.prototype) }}
+
+        <button type="button"
+                class="add-new-element w-36 bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center hidden"
+                data-key="choices"
+                data-list-selector="form_fields___fields___choices">Nouveau Choix
+        </button>
+
+        <button class="w-1/5 mt-5 remove-fields-input bg-red-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"
+                type="button" data-target="fields__fields__section">Supprimer
+        </button>
+    </div>
+{% endmacro %}
